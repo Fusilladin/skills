@@ -1,0 +1,11 @@
+const [,, expr] = process.argv;
+const list = await (await fetch('http://127.0.0.1:9229/json/list')).json();
+const ws = new WebSocket(list[0].webSocketDebuggerUrl);
+await new Promise(r => ws.onopen = r);
+let id = 0; const pend = new Map();
+ws.onmessage = e => { const m = JSON.parse(e.data); if (pend.has(m.id)) { pend.get(m.id)(m); pend.delete(m.id); } };
+const call = (method, params={}) => new Promise(r => { const i = ++id; pend.set(i, r); ws.send(JSON.stringify({ id: i, method, params })); });
+await call("HeapProfiler.enable"); if (process.env.GC) await call("HeapProfiler.collectGarbage");
+const r = await call('Runtime.evaluate', { expression: expr, returnByValue: true, includeCommandLineAPI: true });
+console.log(JSON.stringify(r.result?.result?.value ?? r, null, 1));
+ws.close();

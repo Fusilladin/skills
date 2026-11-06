@@ -1,0 +1,25 @@
+<!-- Scroll progress bar + scroll-motion performance for design-all pages.
+Paste the <style> into the page head, the bar <div> as the last child of the
+sticky <header>, and the <script> just before </body>.
+Uses theme token --purple (the accent). The header must be sticky or
+positioned. ASCII only. -->
+<style id="scroll-perf">
+.prog{position:absolute;left:0;bottom:-1px;height:2px;width:100%;background:var(--purple);transform-origin:left;transform:scaleX(0);z-index:2;pointer-events:none}
+@media print{.prog{display:none}}
+.paused .flow,.paused .loop,.marquee.paused .track{animation-play-state:paused}
+</style>
+
+<!-- inside <header>: -->
+<div class="prog" id="prog"></div>
+
+<script>/* scroll progress bar: rAF-throttled, passive, transform only (composited) */
+(function(){var p=document.getElementById('prog');if(!p)return;var t=false;
+function u(){var h=document.documentElement;p.style.transform='scaleX('+Math.min(1,h.scrollTop/((h.scrollHeight-h.clientHeight)||1))+')';t=false}
+addEventListener('scroll',function(){if(!t){t=true;requestAnimationFrame(u)}},{passive:true});addEventListener('resize',u);u()})();
+/* pause infinite loops (.flow dashes, .loop, .marquee) while offscreen */
+(function(){if(!('IntersectionObserver' in window))return;
+var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('paused',!e.isIntersecting)})});
+var s=new Set();document.querySelectorAll('.marquee').forEach(function(m){s.add(m)});
+document.querySelectorAll('.flow,.loop').forEach(function(f){s.add(f.closest('svg')||f)});
+s.forEach(function(el){io.observe(el)})})();
+</script>

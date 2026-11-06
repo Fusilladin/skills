@@ -1,0 +1,46 @@
+/* kelp-terminal: deep sea-green black with phosphor mint and sand; humanist sans display, mono data. */
+:root{color-scheme:dark;--bg:#08110f;--panel:#0e1a17;--panel2:#14241f;--line:#24392f;--text:#e3f1ea;--muted:#9fbcaf;--green:#6ff0b4;--purple:#e6c98f;--red:#ff8a7a;--amber:#e6c98f;--display:Seravek,"Gill Sans Nova","Gill Sans","Trebuchet MS",Ubuntu,sans-serif;--body:Seravek,"Segoe UI",Ubuntu,system-ui,sans-serif;--r:10px;--sans:var(--body);--mono:ui-monospace,"SF Mono","Cascadia Mono",Consolas,monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:linear-gradient(180deg,#6ff0b40d,transparent 380px),var(--bg);background-attachment:fixed;color:var(--text);font:16px/1.62 var(--body);-webkit-font-smoothing:antialiased}
+::selection{background:var(--green);color:var(--bg)}
+a{color:var(--green);text-underline-offset:3px;text-decoration-thickness:1px}a:hover{color:var(--text)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:clamp(24px,3.2vw,32px);margin:0 0 14px}h3{font-size:20px;margin:22px 0 8px}
+p{overflow-wrap:anywhere}.muted,.l,.src{color:var(--muted)}.l,.src{font-size:13px}.src{font-family:var(--mono)}
+header{padding:22px 22px 0}header .bar,header nav,main{max-width:1040px;margin-inline:auto}
+header .bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
+header h1{font-size:18px;margin:0 auto 0 0}.stamp{color:var(--muted);font:12px var(--mono)}
+header nav{display:flex;flex-wrap:wrap;gap:8px;padding:12px 0}header nav details{position:relative}
+header nav a,header nav summary{display:block;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--text);background:var(--panel);text-decoration:none;cursor:pointer}
+header nav summary{list-style:none}header nav summary::-webkit-details-marker{display:none}header nav summary:after{content:" \25be";color:var(--muted)}
+header nav details[open] summary,header nav a:hover{border-color:var(--green)}
+header nav .menu{position:absolute;z-index:30;top:calc(100% + 6px);left:0;min-width:220px;max-width:min(420px,85vw);padding:6px;border:1px solid var(--line);border-radius:10px;background:var(--panel);box-shadow:0 18px 40px #0009}
+header nav .menu a{border:0;border-radius:6px;white-space:normal}header nav .menu a:hover{background:var(--panel2)}
+main{padding:30px 22px 60px}section{margin:40px 0}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:12px;margin-bottom:30px}
+.strip>div{padding:16px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}.strip strong,.strip .l{display:block}.strip strong{color:var(--green);font:600 22px/1.2 var(--display);font-variant-numeric:tabular-nums}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px}.card.pending{border-top:2px solid var(--amber)}
+.status{display:inline-block;color:var(--amber);border:1px solid color-mix(in srgb,var(--amber) 45%,transparent);border-radius:999px;padding:3px 10px;font:12px var(--mono)}
+.status.ok{color:var(--green);border-color:color-mix(in srgb,var(--green) 45%,transparent)}.status.info{color:var(--purple);border-color:color-mix(in srgb,var(--purple) 45%,transparent)}.missing{color:var(--red)}
+.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}th,td{text-align:left;vertical-align:top;padding:12px 14px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.04em;background:var(--panel2)}tr:last-child td{border-bottom:0}tr.nh{background:color-mix(in srgb,var(--amber) 8%,transparent)}
+ul{padding-left:22px}li{margin:6px 0}.items{display:grid;gap:12px}.item{min-width:0}.item.shot{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:16px}
+img,svg{max-width:100%;height:auto}figure{margin:0}figcaption{font-size:13px;color:var(--muted)}
+.doc{max-width:72ch}.doc h1{font-size:clamp(32px,5vw,48px);margin:10px 0 14px}.doc pre{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}.doc code{font-family:var(--mono);color:var(--green)}
+.doc blockquote,.note{background:var(--panel2);border-radius:10px;padding:14px 18px;margin-inline:0;color:var(--muted)}.doc hr{border:0;border-top:1px solid var(--line)}
+body .decision{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}body .decision.done{border-color:var(--green)}
+body .did{color:var(--muted);font:12px var(--mono)}body .recline{color:var(--amber)}
+body .choice label,body .dec-tools label{display:block;color:var(--muted);font-size:13px;margin:8px 0}
+body .choice select,body .choice textarea,body .dec-tools input{width:100%;min-height:44px;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--bg);color:var(--text);font:inherit}
+body .choice textarea{min-height:90px;resize:vertical}body .dec-tools input{max-width:420px}
+body .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+body .actions button{min-height:44px;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--text);font:inherit;font-size:14px;cursor:pointer;transition:border-color .18s,background .18s}
+body .actions button:hover{border-color:var(--green)}body .actions #dec-copy{background:var(--green);border-color:var(--green);color:var(--bg);font-weight:600}body .actions .danger{color:var(--red)}
+body #dec-status{padding:12px 16px;border-radius:10px;background:var(--panel2);color:var(--muted)}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px}::-webkit-scrollbar-track{background:transparent}
+@media(max-width:650px){main{padding:20px 16px 40px}header{padding:16px 16px 0}body .decision,.item.shot{grid-template-columns:minmax(0,1fr)}header nav .menu{position:fixed;left:16px;right:16px;max-width:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media print{body{background:#fff;color:#111}header nav,body .actions{display:none}}

@@ -1,0 +1,242 @@
+[
+  {
+    "collection": "UI/UX Pro Max",
+    "name": "banner-design",
+    "path": "skills/banner-design"
+  },
+  {
+    "collection": "UI/UX Pro Max",
+    "name": "brand",
+    "path": "skills/brand"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "brandkit",
+    "path": "skills/brandkit"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "claude-review",
+    "path": "skills/claude-review"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "competitor-scan",
+    "path": "skills/competitor-scan"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "design",
+    "path": "skills/design"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "design-all",
+    "path": "skills/design-all"
+  },
+  {
+    "collection": "UI/UX Pro Max",
+    "name": "design-system",
+    "path": "skills/design-system"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "design-taste-frontend",
+    "path": "skills/design-taste-frontend"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "design-taste-frontend-v1",
+    "path": "skills/design-taste-frontend-v1"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "deslop",
+    "path": "skills/deslop"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "deslop-deep",
+    "path": "skills/deslop-deep"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "fast-output",
+    "path": "skills/fast-output"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "full-output-enforcement",
+    "path": "skills/full-output-enforcement"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "gpt-review",
+    "path": "skills/gpt-review"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "gpt-taste",
+    "path": "skills/gpt-taste"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "handoff-review",
+    "path": "skills/handoff-review"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "high-end-visual-design",
+    "path": "skills/high-end-visual-design"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "human-summary",
+    "path": "skills/human-summary"
+  },
+  {
+    "collection": "Humanizer",
+    "name": "humanizer",
+    "path": "skills/humanizer"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "image-to-code",
+    "path": "skills/image-to-code"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "imagegen-frontend-mobile",
+    "path": "skills/imagegen-frontend-mobile"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "imagegen-frontend-web",
+    "path": "skills/imagegen-frontend-web"
+  },
+  {
+    "collection": "Impeccable",
+    "name": "impeccable",
+    "path": "skills/impeccable"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "industrial-brutalist-ui",
+    "path": "skills/industrial-brutalist-ui"
+  },
+  {
+    "collection": "LinkedIn Post Generator",
+    "name": "linkedin-post-generator",
+    "path": "skills/linkedin-post-generator"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "memory-review",
+    "path": "skills/memory-review"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "microsoft-password-loop",
+    "path": "skills/microsoft-password-loop"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "minimalist-ui",
+    "path": "skills/minimalist-ui"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "next-steps",
+    "path": "skills/next-steps"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "notes-mode",
+    "path": "skills/notes-mode"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "page-update",
+    "path": "skills/page-update"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "pdf-redact",
+    "path": "skills/pdf-redact"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "redesign-existing-projects",
+    "path": "skills/redesign-existing-projects"
+  },
+  {
+    "collection": "UI/UX Pro Max",
+    "name": "slides",
+    "path": "skills/slides"
+  },
+  {
+    "collection": "Taste Skill",
+    "name": "stitch-design-taste",
+    "path": "skills/stitch-design-taste"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "taste",
+    "path": "skills/taste"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "theme",
+    "path": "skills/theme"
+  },
+  {
+    "collection": "UI/UX Pro Max",
+    "name": "ui-styling",
+    "path": "skills/ui-styling"
+  },
+  {
+    "collection": "UI/UX Pro Max",
+    "name": "ui-ux-pro-max",
+    "path": "skills/ui-ux-pro-max"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "update-skills",
+    "path": "skills/update-skills"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "verify-review",
+    "path": "skills/verify-review"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "video-analyzer",
+    "path": "skills/video-analyzer"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "video-analyzer-creative",
+    "path": "skills/video-analyzer-creative"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "video-analyzer-knowledge",
+    "path": "skills/video-analyzer-knowledge"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "video-analyzer-vision",
+    "path": "skills/video-analyzer-vision"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "weekly-system-review",
+    "path": "skills/weekly-system-review"
+  },
+  {
+    "collection": "Personal and installed skills",
+    "name": "yt-downloader",
+    "path": "skills/yt-downloader"
+  }
+]

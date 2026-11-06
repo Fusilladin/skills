@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="next-steps skill">
+<title>{{TITLE}}</title>
+<!-- THEME: in a themed project replace this whole block (link + fallback <style>)
+     with the project's own <link>/<style> head, e.g. <link rel="stylesheet" href="theme/vault-graphite.css">.
+     Keep the fallback only when the project has no theme. -->
+<style id="fallback-theme">
+:root{--bg:#f7f6f2;--panel:#fff;--panel2:#eeece6;--text:#1d1d1b;--muted:#66645e;--line:#d9d6ce;
+  --green:#2f7d4f;--amber:#a5660a;--red:#b23b32;--purple:#6a4fb3;
+  --body:system-ui,-apple-system,"Segoe UI",sans-serif;--mono:ui-monospace,"SFMono-Regular",Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151514;--panel:#1e1e1c;--panel2:#272725;
+  --text:#ecebe6;--muted:#a3a19a;--line:#3a3935;--green:#6cc08f;--amber:#e3a548;--red:#ec7b70;--purple:#a993ef}}
+:root[data-theme="dark"]{--bg:#151514;--panel:#1e1e1c;--panel2:#272725;--text:#ecebe6;--muted:#a3a19a;--line:#3a3935;
+  --green:#6cc08f;--amber:#e3a548;--red:#ec7b70;--purple:#a993ef}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 var(--body)}
+header .bar,main{max-width:980px;margin:0 auto;padding:0 16px}
+header .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:16px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+header nav{display:flex;gap:16px}header a{color:var(--text)}
+.stamp{font:12px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.muted{color:var(--muted)}.src{font:12px var(--mono);color:var(--muted);overflow-wrap:anywhere}
+code{font-family:var(--mono);font-size:.92em;overflow-wrap:anywhere}
+button{font:inherit;cursor:pointer;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px}
+.status{font:13px var(--mono);padding:6px 12px;border:1px solid var(--line);border-radius:20px}
+.status.ok{color:var(--green);border-color:var(--green)}.status.info{color:var(--amber);border-color:var(--amber)}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
+</style>
+<style>
+/* next-steps page rules: uses only theme tokens, works on any plan theme */
+.steps{list-style:none;padding:0;margin:0}
+.step{display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;padding:22px 0;border-bottom:1px solid var(--line)}
+.step input{width:24px;height:24px;margin-top:4px;accent-color:var(--green)}
+.step.checked h3{color:var(--muted);text-decoration:line-through}
+.step h3{margin:0 0 6px}
+.who{font:12px var(--mono);color:var(--muted);margin-left:8px}
+.st{font:12px var(--mono);padding:3px 9px;border:1px solid var(--line);border-radius:20px;margin-left:8px;white-space:nowrap}
+.st.done{color:var(--green);border-color:var(--green)}.st.you{color:var(--amber)}.st.wait{color:var(--muted)}.st.claude{color:var(--purple)}
+.chk{font:12px var(--mono);color:var(--muted);margin:8px 0 0;overflow-wrap:anywhere}
+.cmd{display:flex;gap:8px;align-items:stretch;margin:10px 0;flex-wrap:wrap}
+.cmd pre{flex:1 1 320px;min-width:0;margin:0;padding:12px 14px;background:var(--panel2);border-radius:10px;overflow-x:auto;font-size:13px}
+.cmd button{min-height:40px;padding:6px 14px;font-size:13px}
+details.undo{margin:8px 0 0}details.undo summary{cursor:pointer;color:var(--muted);font-size:14px}
+.sum{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0 0}
+section{padding:56px 0}
+h1{font-size:clamp(38px,6vw,72px);line-height:1.05;margin:0}
+.lede{max-width:70ch;color:var(--muted);margin:16px 0 0}
+</style>
+</head>
+<body>
+<header><div class="bar"><span class="stamp">{{STAMP}}</span><nav>{{NAV}}</nav></div></header>
+<main>
+<section>
+  <h1>{{HEADING}}</h1>
+  <p class="lede">{{LEDE}} Updated {{DATE}}. Checkmarks are saved in this browser only.</p>
+  <div class="sum" id="sum"></div>
+</section>
+
+<section>
+  <h2>Steps</h2>
+  <ol class="steps">
+    <!-- One <li> per step, in the order they must happen. data-st: done | you | wait | claude.
+         Badge text: "done", "you · sudo" / "you · paid" / "you · reply", "waits on <thing>", "by Claude".
+         Every step ends with a .chk line naming the check behind its status. -->
+    <li class="step" data-id="s1" data-st="done"><input type="checkbox" aria-label="done"><div>
+      <h3>1. {{STEP TITLE}}<span class="st done">done</span></h3>
+      <p>{{WHAT AND WHY, plain words}}</p>
+      <p class="chk">Check: <code>{{command}}</code> → {{what it printed}} ({{YYYY-MM-DD HH:MM}})</p></div></li>
+
+    <li class="step" data-id="s2" data-st="you"><input type="checkbox" aria-label="done"><div>
+      <h3>2. {{STEP TITLE}}<span class="st you">you · sudo</span></h3>
+      <p>{{WHAT AND WHY}}</p>
+      <div class="cmd"><pre>{{command shown}}</pre><button data-copy="{{exact command copied}}">Copy</button></div>
+      <details class="undo"><summary>Undo</summary><div class="cmd"><pre>{{undo command}}</pre><button data-copy="{{undo command}}">Copy</button></div></details>
+      <p class="chk">Check: <code>{{command}}</code> → {{result}} ({{time}})</p></div></li>
+
+    <li class="step" data-id="s3" data-st="wait"><input type="checkbox" aria-label="done"><div>
+      <h3>3. {{STEP TITLE}}<span class="st wait">waits on {{X}}</span></h3>
+      <p>{{WHAT AND WHY}}</p>
+      <p class="chk">Check: <code>{{command}}</code> → {{result}} ({{time}})</p></div></li>
+  </ol>
+</section>
+
+<!-- Optional: delete this section when nothing has to be bought or chosen. -->
+<section>
+  <h2>Options and costs</h2>
+  <p class="muted">{{one line: where the prices come from and when they were checked}}</p>
+  <div class="table-wrap"><table>
+    <tr><th>Need</th><th>Default</th><th>Alternatives</th><th>Cost / watch</th></tr>
+    <tr><td>{{need}}</td><td>{{default}}</td><td>{{alternatives}}</td><td>{{cost or limit, with date}}</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <h2>Sources</h2>
+  <p class="src">{{files and URLs the page was built from, separated by " · "}}</p>
+</section>
+</main>
+<script>
+const KEY = '{{STORAGE_KEY}}'; // e.g. 'incus-next-steps-v1'; bump -v when step ids change
+let saved = {}; try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch {}
+const steps = [...document.querySelectorAll('.step')];
+function render() {
+  const n = steps.length, done = steps.filter(s => s.querySelector('input').checked).length;
+  const you = steps.filter(s => s.dataset.st === 'you' && !s.querySelector('input').checked).length;
+  const wait = steps.filter(s => s.dataset.st === 'wait' && !s.querySelector('input').checked).length;
+  document.getElementById('sum').innerHTML =
+    `<span class="status ok">${done} / ${n} done</span><span class="status info">${you} waiting on you</span>` +
+    (wait ? `<span class="status">${wait} waiting on something else</span>` : '');
+}
+steps.forEach(s => {
+  const box = s.querySelector('input');
+  box.checked = saved[s.dataset.id] ?? s.dataset.st === 'done';
+  s.classList.toggle('checked', box.checked);
+  box.addEventListener('change', () => {
+    saved[s.dataset.id] = box.checked; s.classList.toggle('checked', box.checked);
+    try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch {}
+    render();
+  });
+});
+document.querySelectorAll('[data-copy]').forEach(b => {
+  const label = b.textContent;
+  b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied'; }
+    catch { b.textContent = 'Select and copy'; }
+    setTimeout(() => b.textContent = label, 1500);
+  });
+});
+render();
+</script>
+</body>
+</html>
