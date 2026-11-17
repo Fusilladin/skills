@@ -1,15 +1,15 @@
 ---
 name: memory-review
-description: Weekly RAM and /tmp check of this Linux box and the plans harness. Snapshot the biggest processes, sort them into leak / held-not-freed / piling-up / normal with real evidence (heap snapshots of Node servers, X shared memory, /tmp files), then write a frame-budget HTML page with charts and decision cards, apply the owner's decisions and run /page-update. Run once a week, next to /verify-review and /handoff-review. Invoked as /memory-review.
+description: Weekly RAM and /tmp check of this Linux box and the plans harness. Snapshot the biggest processes, sort them into leak / held-not-freed / piling-up / normal with real evidence (heap snapshots of Node servers, X shared memory, /tmp files), then write a chart-first review-kit HTML page with finding cards and decision cards, apply the owner's decisions and run /page-update. Run once a week, next to /verify-review and /handoff-review. Invoked as /memory-review.
 ---
 
 # /memory-review
 
 Weekly check of where RAM and RAM-backed /tmp go, and whether anything grows.
-First run: 2026-11-02/03. It found the Observatory Codex-string leak, the opencode `.so` pile-up in /tmp, and the screenshot hotkey's leftover X shared memory. All were fixed. Page: `_reports/memory-review-2026-11-03.html` (detail page `_run/memory-fixes/index.html`).
+First run: 2026-11-02/03. It found the Run Dashboard Codex-string leak, the opencode `.so` pile-up in /tmp, and the screenshot hotkey's leftover X shared memory. All were fixed. Page: `_reports/memory-review-2026-11-03.html` (detail page `_run/memory-fixes/index.html`).
 
-Work folder: `~/projects/plans/_reports/memory-review/<YYYY-MM-DD>/`. Keep it out of /tmp, which is RAM.
-Page: `~/projects/plans/_reports/memory-review-<YYYY-MM-DD>.html`, linked from `~/projects/plans/index.html` under "How it works".
+Work folder: `/path/to/projects/workspace/_reports/memory-review/<YYYY-MM-DD>/`. Keep it out of /tmp, which is RAM.
+Page: `/path/to/projects/workspace/_reports/memory-review-<YYYY-MM-DD>.html`, linked from `/path/to/projects/workspace/index.html` under "How it works".
 No subagents: the whole review is a few dozen read-only commands. Do it in this session.
 
 ## 0. Intake
@@ -19,15 +19,15 @@ Unless the owner already said "just run it", ask once: apply recommended fixes w
 ## 1. Snapshot (read-only)
 
 ```bash
-W=~/projects/plans/_reports/memory-review/$(date +%F)
-PREV=$(ls -d ~/projects/plans/_reports/memory-review/*/snapshot.json 2>/dev/null | grep -v "$(date +%F)" | tail -1)
+W=/path/to/projects/workspace/_reports/memory-review/$(date +%F)
+PREV=$(ls -d /path/to/projects/workspace/_reports/memory-review/*/snapshot.json 2>/dev/null | grep -v "$(date +%F)" | tail -1)
 python3 -I ~/.agents/skills/memory-review/scripts/collect.py --out $W ${PREV:+--prev $PREV}
 ```
 `snapshot.json` holds:
 - meminfo, plus the top 25 processes with RSS, anon, shm and age;
 - System V shared memory segments of 16 MB and up, with their creator;
 - /tmp usage, its biggest entries, and opencode `.so` files counted per hour;
-- the Observatory service, Zen probe ok/down per day, and any `~/tmp-archive*`.
+- the Run Dashboard service, Zen probe ok/down per day, and any `~/tmp-archive*`.
 
 `prev_rss` shows growth since last week.
 
@@ -35,7 +35,7 @@ python3 -I ~/.agents/skills/memory-review/scripts/collect.py --out $W ${PREV:+--
 
 Check `prev_rss` and age first. A big process that is young and was big last week is usually normal. Then work through these by type:
 
-- **Node server** (Observatory or any long-running node):
+- **Node server** (Run Dashboard or any long-running node):
   1. Open the inspector with `kill -USR1 <pid>`.
   2. Run `node scripts/node-eval.mjs '<expr>'` with `process.memoryUsage()` and `v8.getHeapSpaceStatistics()`. Prefix it with `GC=1` to force a garbage collection first.
   3. If the heap stays big after GC, run `node scripts/heap-snapshot.mjs $W/x.heapsnapshot`, then `node --max-old-space-size=8000 scripts/heap-top.mjs $W/x.heapsnapshot 400`. It prints the largest objects and their retainer paths.
@@ -59,7 +59,7 @@ Write `$W/findings.json`; the schema is at the top of `scripts/build_page.py`.
 - Follow humanizer rules: plain words, no em dashes, outcome first.
 
 ```bash
-python3 -I ~/.agents/skills/memory-review/scripts/build_page.py --work $W --out ~/projects/plans/_reports/memory-review-$(date +%F).html
+python3 -I ~/.agents/skills/memory-review/scripts/build_page.py --work $W --out /path/to/projects/workspace/_reports/memory-review-$(date +%F).html
 ~/.local/bin/node ~/.agents/skills/memory-review/scripts/shot.cjs <page.html> $W/shot
 ```
 The builder runs collapsible, scroll-perf and fix-chars itself. `shot.cjs` checks 1440 and 390 px and prints console errors, external requests and overflow; look at the screenshots yourself. Add the page link in `plans/index.html` under "How it works".
@@ -69,14 +69,17 @@ The builder runs collapsible, scroll-perf and fix-chars itself. `shot.cjs` check
 - Back up every changed file as `*.bak-<date>-memreview`. Check it with `node --check`, `bash -n` or `python3 -m py_compile`, and remove any `__pycache__` that creates.
 - Edit by matching text, not line numbers, because files shift between weeks.
 - Replace a bash script that may be running with a temp file and `mv`; never edit it in place.
-- Observatory: run `systemctl --user restart observatory` (never start it by hand), then check RSS after about 2 minutes.
+- Run Dashboard: run `systemctl --user restart run-dashboard` (never start it by hand), then check RSS after about 2 minutes.
 - Desktop apps (for example `~/.local/bin/screenshot-hotkey`): restart them with xfce4-panel's `/proc/<pid>/environ` under `setsid`, and ask the owner to try them once.
 - Deleting archives: ask the watcher first if the owner says so. To find it, follow auditq-wait.sh's parent `claude --resume` to `~/.claude/sessions/*.json` and its name, then use SendMessage.
-- Log harness changes as a HARNESS.md section 13 entry. Then record the answers in `findings.json`, mark the fixes done, rebuild, and run `/page-update` on the page.
+- Log harness changes as a dated HARNESS-CHANGELOG.md entry (never in HARNESS.md; edit the rule there in place). Then record the answers in `findings.json`, mark the fixes done, rebuild, and run `/page-update` on the page.
 
 ## Rules learned
 
 - Measure before you name a cause: forced GC plus a heap snapshot for Node, and smaps plus ipcs for shared memory.
 - A fresh restart that looks small proves nothing. Compare against the same age, or the state after first use.
 - When Xorg and a client share SYSV pages, the process list counts them twice.
-- End the reply with the page path on two lines: `~/projects/plans/_reports/...` and `http://localhost:8000/projects/plans/_reports/...`.
+- End the reply with the page path on two lines: `/path/to/projects/workspace/_reports/...` and `http://localhost:8000/projects/plans/_reports/...`.
+
+## Page style (owner 2026-11-10, shared with /review-all)
+Build with `scripts/build_page.py`; it uses the shared kit `~/.agents/skills/review-all/kit/review_kit.py` (same look on all review pages). Rules: far fewer words, SVG instead of prose; hero = one short verdict + 3-4 big numbers; each section = one chart + one short line + at most one closed Details panel for technical detail; fixes as cards, each with its OWN small SVG from that fix's numbers (`viz`), a done/open chip and one short line; plain non-technical words for a tech lead. The data JSON must carry `line` + `viz` per fix/finding and a short verdict (see the builder docstring). Check with `node ~/.agents/skills/review-all/kit/shot.cjs <dir> <url>` (1440/390) and look at the shots. Runs from /review-all too.

@@ -1,6 +1,6 @@
-const { chromium } = require('playwright');
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 (async () => {
-  const b = await chromium.launch();
+  const b = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined });
   const errs = [], ext = [];
   for (const [w, h] of [[1440, 900], [390, 844]]) {
     const p = await b.newPage({ viewport: { width: w, height: h } });

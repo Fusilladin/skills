@@ -5,17 +5,17 @@ description: Write or refresh a "next steps" HTML page for any task or project, 
 
 # next-steps
 
-`/next-steps [project or topic]` writes `next-steps.html` for a task or project: the steps still left before something works, in the order they must happen. It works for any folder or topic, not only plans in `~/projects/plans`.
+`/next-steps [project or topic]` writes `next-steps.html` for a task or project: the steps still left before something works, in the order they must happen. It works for any folder or topic, not only plans in `/path/to/projects/workspace`.
 
-Reference page: `~/projects/plans/10-agent-sandbox/next-steps.html` (plan 10 Incus rollout, 2026-10-22). Skeleton: `template.html` in this folder. Check runner: `check.sh` in this folder.
+Reference page: `/path/to/projects/workspace/example-project/next-steps.html` (plan example Incus rollout, 2026-10-22). Skeleton: `template.html` in this folder. Check runner: `check.sh` in this folder.
 
 ## How this differs from plan-status-page
 
-`plan-status-page` (in `~/projects/plans/.claude/skills/`) builds a plan's `approvals.html`: every approval item and decision the Observatory knows, with calls saved back to the Observatory, rebuilt automatically. `/next-steps` is a short, hand-made, ordered checklist for one rollout or setup job in any project: what to run, buy or confirm next, with live status checks and copyable commands. It saves nothing outside the browser and nothing rebuilds it. For a plan, the next-steps page links the plan's `approvals.html` when one exists, and does not repeat its decision cards.
+`plan-status-page` (in `/path/to/projects/workspace/.claude/skills/`) builds a plan's `approvals.html`: every approval item and decision the Run Dashboard knows, with calls saved back to the Run Dashboard, rebuilt automatically. `/next-steps` is a short, hand-made, ordered checklist for one rollout or setup job in any project: what to run, buy or confirm next, with live status checks and copyable commands. It saves nothing outside the browser and nothing rebuilds it. For a plan, the next-steps page links the plan's `approvals.html` when one exists, and does not repeat its decision cards.
 
 ## Inputs
 
-1. Work out the target from the argument: a folder path, a plan number or slug (`10`, `10-agent-sandbox`), or a topic in the current project. If it is unclear which project or rollout is meant, ask once.
+1. Work out the target from the argument: a folder path, a plan number or slug (`example`, `example-project`), or a topic in the current project. If it is unclear which project or rollout is meant, ask once.
 2. Output path: `<project>/next-steps.html`, or `<project>/next-steps-<topic>.html` when the project has more than one rollout. If a page already exists there, refresh it: keep its step ids (so saved checkmarks still match), update statuses, add and remove steps.
 3. Read the sources:
    - Plan projects: `PLAN.md`, `_build/VERIFY.md` (verdict, what is mocked, how to make it real), `_build/DEFERRED.md` (owner items, exact commands, "Next step" lines), any spec the rollout names (e.g. `INCUS-SPEC.md`), the newest `_run/handoff/` brief for it.
@@ -39,7 +39,7 @@ Never assume a status, and never copy one from a doc without checking it now.
 
 ## Page contents (copy the reference structure)
 
-- **Header:** a stamp (`Plan 10 · Agentbox v3` or the project name) and a nav. For a plan, link `index.html` and, when it exists, `approvals.html`.
+- **Header:** a stamp (`Plan example · Agentbox v3` or the project name) and a nav. For a plan, link `index.html` and, when it exists, `approvals.html`.
 - **Hero:** `<h1>` "<Thing>: next steps", a lede of 2-3 sentences saying what is left before what works and what does not need these steps, the date, and "Checkmarks are saved in this browser only." Then the summary counts (`#sum`: done / total, waiting on the owner, waiting on something else), filled by the script.
 - **Steps:** an ordered list, one `<li class="step">` per step, in the order they must happen; merge steps that are one command (the reference's "3–4"). Each has a stable `data-id`, `data-st`, a checkbox, a numbered title with the status badge and a `.who` tag when useful (`by Claude`), one or two plain sentences on what and why, copyable commands (`.cmd` with a `data-copy` button holding the exact text), a `<details class="undo">` with the undo command for anything that changes the system (sudo, config, firewall, installs), and the `.chk` line. For replies, give the exact reply to copy ("yes to 6-8"). Never put a secret in a command or a page; say where the owner puts it instead ("in the folder below; never paste it in chat").
 - **Options and costs** (optional): a table when the owner must buy or choose something: need, default, alternatives, cost or limit with the date checked. Give prices only from a source you read; otherwise write "not checked" and say where the build confirms them.
@@ -48,7 +48,7 @@ Never assume a status, and never copy one from a doc without checking it now.
 
 ## Writing rules
 
-Presentation rules: plain language, and the reader is "the owner" or "you". Never write a person's name, including in commands' comments; use generic home-relative paths. Roles for everyone else (client, builder, watcher).
+House rules (owner, 2026-10-21): plain language, and the reader is "the owner" or "you". Never write a person's name, including in commands' comments; paths like `/path/to/home` are fine. Roles for everyone else (client, builder, watcher).
 
 - One idea per sentence, everyday words. Explain any term the owner needs (WireGuard, bridge, preseed) in a few words the first time.
 - Keep numbers exact; label estimates as estimates. If the sources do not say, write "not measured" or "not checked".
@@ -58,5 +58,5 @@ Presentation rules: plain language, and the reader is "the owner" or "you". Neve
 ## Check the result
 
 1. Grep the page: no `{{` placeholders left, no person's name, no secrets, every step has a `.chk` line.
-2. Open it at 1280 and 390 wide with Playwright (`require('playwright')`; scroll with `behavior:'instant'`). Look for: no horizontal scroll at 390 (`document.documentElement.scrollWidth <= innerWidth`), no page errors, the summary shows the right counts, a checkbox click survives a reload.
+2. Open it at 1280 and 390 wide with Playwright (`require('/path/to/projects/browser-tools/node_modules/playwright')`; scroll with `behavior:'instant'`). Look for: no horizontal scroll at 390 (`document.documentElement.scrollWidth <= innerWidth`), no page errors, the summary shows the right counts, a checkbox click survives a reload.
 3. Reply with the page path (`~/...`), the counts (done / you / waiting) and the next owner step.

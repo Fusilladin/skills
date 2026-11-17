@@ -76,14 +76,14 @@ def tmp_usage():
 
 def services():
     out = {}
-    for unit in ('observatory',):
+    for unit in ('run-dashboard',):
         pid = subprocess.run(['systemctl', '--user', 'show', '-p', 'MainPID', '--value', unit], capture_output=True, text=True).stdout.strip()
         if pid and pid != '0':
             out[unit] = {'pid': int(pid), **{k.lower(): v for k, v in status(pid).items()}}
     return out
 
 def zen_probes():
-    log = os.path.expanduser('~/dev/projects/plans/_run/flags/free_heartbeat.log')
+    log = os.path.expanduser('/path/to/projects/workspace/_run/flags/free_heartbeat.log')
     days = {}
     for ln in rd(log).splitlines():
         m = re.match(r'(\d{4}-\d\d-\d\d) \S+ zen \S+ (ok|down|skipped)', ln)

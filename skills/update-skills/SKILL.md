@@ -10,7 +10,7 @@ Use the current host agent and its available filesystem tools. This skill does n
 
 ## Scope and discovery
 
-Default global destination: `~/.agents/skills`. Default project search root: `~/projects/dev`; use an explicit user path instead when supplied. Inspect global `~/.claude/skills`, `~/.codex/skills` (respect `CODEX_HOME` if set), and `~/.agents/skills`. Inspect project `.claude/skills`, `.codex/skills`, and `.agents/skills`, including nested projects. Read applicable project `AGENTS.md` before project writes.
+Default global destination: `~/.agents/skills`. Default project search root: `/path/to/projects/dev`; use an explicit user path instead when supplied. Inspect global `~/.claude/skills`, `~/.codex/skills` (respect `CODEX_HOME` if set), and `~/.agents/skills`. Inspect project `.claude/skills`, `.codex/skills`, and `.agents/skills`, including nested projects. Read applicable project `AGENTS.md` before project writes.
 
 Look for skill packages containing `SKILL.md`. Include personal Claude `synced/<bucket>/<skill>` packages, flattening only the destination layout. Exclude provider-managed `.system`, plugin caches/bundles, Git internals, dependencies, virtual environments, generated outputs, and fixtures inside skill packages. Do not copy arbitrary repository-root `SKILL.md` files unless an established skill link or the user identifies them as skills.
 

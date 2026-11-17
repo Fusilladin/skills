@@ -1,66 +1,53 @@
 #!/usr/bin/env python3
-"""build_page.py - turn <work>/final-review.json + stops.json into the weekly handoff review page.
+"""build_page.py - weekly handoff review page from <work>/final-review.json + stops.json (review_kit style, owner 2026-11-10).
 
-  python3 build_page.py --work <workdir> --out ~/dev/projects/plans/_reports/handoff-review-YYYY-MM-DD.html
+  python3 build_page.py --work <workdir> --out /path/to/projects/workspace/_reports/handoff-review-YYYY-MM-DD.html
 
-human-summary render (orbit-ledger, decision cards for open owner calls) -> <main> replaced with: verdict +
-fix-status donut, stops-per-day chart, round outcomes waffle, fixes board (status, impact, effort), open decisions,
-closed panels (answered decisions, rejected claims). Then collapsible, scroll-perf, fix-chars, and a copy to
-_reports/handoff-review-latest.html (the Observatory "Handoff review" button opens that).
+Few words, SVG first: hero verdict + big numbers; sections (one chart + one line each): where rounds ended (funnel),
+shutdowns (timeline), retry loop (tick strip), stops per day; fix cards (each with its own viz from fixes[].viz);
+decision cards; Details panels hold the technical text. Also writes handoff-review-latest.html and <out>.summary.json.
+Needs in final-review.json: fixes[].line + fixes[].viz, and viz {verdict_short, shutdowns[], loop} (see opus-brief.md).
 """
-import argparse, html, json, os, re, shutil, subprocess
-ap = argparse.ArgumentParser(); ap.add_argument('--work', required=True); ap.add_argument('--out', required=True)
-a = ap.parse_args(); OUT = os.path.expanduser(a.out); PLANS = os.path.expanduser('~/projects/plans'); HERE = os.path.dirname(os.path.abspath(__file__))
+import argparse, json, os, shutil, sys
+import review_kit as K
+ap = argparse.ArgumentParser(); ap.add_argument('--work', required=True); ap.add_argument('--out', required=True); a = ap.parse_args()
 fr = json.load(open(f'{a.work}/final-review.json')); st = json.load(open(f'{a.work}/stops.json')).get('stopStats') or {}
-E = lambda s: html.escape(str(s), quote=True)
+nb = fr['numbers']; vz = fr.get('viz', {}); oc = {o['kind']: o for o in fr['outcomes']}; fx = fr['fixes']
 openq = [d for d in fr.get('decisions', []) if not d.get('answer')]; answered = [d for d in fr.get('decisions', []) if d.get('answer')]
-content = {'title': f'Handoff review ({fr["window"].replace("..", " to ")})', 'project': 'plans', 'summary': fr['summary'],
-           'needs_human': [{'title': d['title'], 'detail': d['why']} for d in openq], 'decisions': openq,
-           'artifacts': [{'label': 'Run observatory', 'path': '_observatory/index.html', 'note': 'Optimize tab: the handoff tip.'}]}
-json.dump(content, open(f'{a.work}/content.json', 'w'), indent=1)
-env = dict(os.environ, GIT_CEILING_DIRECTORIES=os.path.expanduser('~/projects'))
-subprocess.run(['python3', os.path.expanduser('~/.claude/skills/human-summary/render.py'), 'render', f'{a.work}/content.json', '-o', OUT,
-                '--theme', 'orbit-ledger', '--root', PLANS], check=True, cwd=PLANS, env=env, stdout=subprocess.DEVNULL)
-h = open(OUT, encoding='utf-8').read()
-# fix-status donut
-fx = fr.get('fixes', []); cnt = {k: sum(f['status'] == k for f in fx) for k in ('done', 'open', 'none')}
-C = 2 * 3.14159 * 40; off = 0; arcs = ''
-for k, col in (('done', 'var(--green)'), ('open', 'var(--red)'), ('none', 'var(--purple)')):
-    L = C * cnt[k] / max(len(fx), 1); arcs += f'<circle r="40" cx="50" cy="50" fill="none" stroke="{col}" stroke-width="14" stroke-dasharray="{L:.1f} {C - L:.1f}" stroke-dashoffset="{-off:.1f}"/>'; off += L
-donut = f'<svg viewBox="0 0 100 100" width="120" height="120" role="img" aria-label="{cnt["done"]} done, {cnt["open"]} open" style="transform:rotate(-90deg)"><circle r="40" cx="50" cy="50" fill="none" stroke="var(--panel2)" stroke-width="14"/>{arcs}</svg>'
-nb = fr.get('numbers', {})
-lead = f'''<section id="verdict"><h2>Verdict</h2><div class="newtop">{donut}<div><p class="big">{E(fr["verdict"])}</p><p class="muted">{nb.get("rounds", "?")} rounds, {nb.get("launches", "?")} launches. {nb.get("stops", 0)} stops: {nb.get("noted", 0)} with a note, {nb.get("unnoted", 0)} without, {nb.get("late", 0)} late. Fixes: {cnt["done"]} done, {cnt["open"]} open.</p></div></div>''' + ''.join(f'<p class="muted">{E(p)}</p>' for p in fr['summary']) + '</section>'
-# stops per day
-days = st.get('daily', [])[-10:]; mx = max([d['noted'] + d['unnoted'] + d['late'] for d in days] + [1]); cols = ''
-for d in days:
-    seg = lambda v, c: f'<span class="seg {c}" style="height:{100 * v / mx:.2f}%"></span>' if v else ''
-    cols += f'<div class="col"><span class="tot">{d["noted"] + d["unnoted"] + d["late"]}</span><div class="stack">{seg(d["late"], "s-miss")}{seg(d["unnoted"], "s-bad")}{seg(d["noted"], "s-ok")}</div><span class="dl">{d["date"][5:]}</span></div>'
-daychart = f'''<section id="days"><h2>Stops per day</h2><figure class="chart daychart"><div class="cols" style="grid-template-columns:repeat({max(len(days), 1)},minmax(0,1fr))">{cols}</div><div class="legend"><span><i class="s-ok"></i>With a note</span><span><i class="s-bad"></i>No note</span><span><i class="s-miss"></i>Late (outputs complete, nothing lost)</span></div><figcaption>One row per round per day, from the Observatory detector (blockers.mjs). The detector looks back 7 days.</figcaption></figure></section>'''
-# outcomes waffle
-WC = {'ok': 'w-ok', 'note': 'w-note', 'warn': 'w-warn'}
-cells = ''.join(f'<span class="{WC.get(o["kind"], "w-ok")}"></span>' for o in fr.get('outcomes', []) for _ in range(o['n']))
-wl = ''.join(f'<li><i class="{WC.get(o["kind"], "w-ok")}"></i><b>{o["n"]}</b> {E(o["label"])}</li>' for o in fr.get('outcomes', []))
-nq, rf = fr.get('note_quality', {}), fr.get('retry_found', {})
-waffle = f'''<section id="rounds"><h2>Every round this week</h2><figure class="chart"><div class="waffle">{cells}</div><ul class="wleg">{wl}</ul><figcaption>One square per round. Notes: {nq.get("good", 0)} good, {nq.get("thin", 0)} thin, {nq.get("wrong", 0)} wrong. Retries found the note: {rf.get("prompt", 0)} through the prompt, {rf.get("chance", 0)} by chance, {rf.get("never", 0)} never.</figcaption></figure></section>'''
-CH = {'done': ('Done', 'ch-done'), 'open': ('Open', 'ch-open'), 'none': ('No change', 'ch-none')}
-order = sorted(fx, key=lambda f: ({'open': 0, 'none': 1, 'done': 2}[f['status']], -f.get('impact', 0)))
-rows = ''.join(f'<div class="fx"><span class="chip {CH[f["status"]][1]}">{CH[f["status"]][0]}</span><div><b>{E(f["name"])}</b><p>{E(f["text"])}</p></div><span class="track"><span class="hb b-acc" style="--w:{f.get("impact", 1) / 10:.2f}"></span></span><span class="chip">{E(f.get("effort", "?"))}</span></div>' for f in order)
-fixes = f'<section id="fixes"><h2>Fixes</h2><p class="muted">Open first, then by impact (bar). Last chip is effort.</p><div class="fxbox chart">{rows or "<p>None.</p>"}</div></section>'
-m = re.search(r'<main>(.*)</main>', h, re.S); body = m.group(1)
-dec = (re.search(r'<section id="decisions">.*?</section>(?:<script>.*?</script>)*', body, re.S) or [''])[0] if openq else ''
-rej = ''.join(f'<li><span class="chip ch-none">{E(r["result"])}</span><div><b>{E(r["claim"])}</b> {E(r["why"])}</div></li>' for r in fr.get('rejected', []))
-ans = ''.join(f'<li><span class="chip ch-done">Done</span><div><b>{E(d["title"])}</b> {E(d["answer"])}</div></li>' for d in answered)
-folded = '<section id="more"><h2>Details</h2>' + (f'<details class="done-dec"><summary>Your decisions ({len(answered)} answered)</summary><ul class="newlist">{ans}</ul></details>' if answered else '') \
-    + (f'<details class="done-dec"><summary>Haiku claims that did not hold ({len(fr.get("rejected", []))})</summary><ul class="newlist">{rej}</ul></details>' if rej else '') + '</section>'
-h = h[:m.start()] + '<main>' + lead + fixes + dec + daychart + waffle + folded + '</main>' + h[m.end():]
-h = re.sub(r'<nav>.*?</nav>', '<nav><a href="#verdict">Verdict</a><a href="#fixes">Fixes</a>' + ('<a href="#decisions">Decide</a>' if openq else '') + '<a href="../_observatory/index.html">Run Observatory</a><a href="../index.html">Plans</a></nav>', h, count=1, flags=re.S)
-if not openq: h = re.sub(r'<span class="status" id="dec-badge">.*?</span>', '', h)
-coll = open(os.path.expanduser('~/.agents/skills/design-all/collapsible.html')).read()
-h = h.replace('</head>', '<style id="page">' + open(f'{HERE}/page.css').read() + '</style>' + re.search(r'<style id="collapsible">.*?</style>', coll, re.S)[0] + '</head>', 1)
-reveal = "(()=>{const els=document.querySelectorAll('.chart');if(!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches){els.forEach(e=>e.classList.add('reveal-on'));return}const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('reveal-on');io.unobserve(e.target)}}),{rootMargin:'0px 0px 5% 0px'});els.forEach(e=>io.observe(e))})();"
-h = h.replace('</body>', re.search(r'<script>\(\(\)=>\{.*?</script>', coll, re.S)[0] + f'<script>{reveal}</script></body>', 1)
-open(OUT, 'w', encoding='utf-8').write(h)
-subprocess.run(['node', os.path.expanduser('~/.agents/skills/design-all/scroll-perf.mjs'), '--home', '../index.html', OUT], cwd=PLANS, check=False, stdout=subprocess.DEVNULL)
-subprocess.run(['python3', os.path.expanduser('~/.claude/skills/theme/theme.py'), 'fix-chars', OUT], check=False, stdout=subprocess.DEVNULL)
-shutil.copy(OUT, os.path.join(os.path.dirname(OUT), 'handoff-review-latest.html'))
-print('wrote', OUT, '+ handoff-review-latest.html')
+clean = oc.get('ok', {}).get('n', 0); pct = round(100 * clean / max(nb['rounds'], 1))
+tiles = [(nb['rounds'], 'rounds this week', 'n'), (nb['launches'], 'launches', 'n'), (f'{pct}%', 'clean on the first try', 'ok'), (nb['lost_work'], 'lost work, no note', 'bad')]
+S = []
+S.append(K.section('ended', 'Where rounds ended', K.funnel(('Rounds', nb['rounds']), [
+    (oc['ok']['label'], oc['ok']['n'], 'ok', ''), (oc['note']['label'], oc['note']['n'], 'info', ''),
+    (oc['warn']['label'], oc['warn']['n'], 'bad', f'{nb["lost_work"]} lost real work')]),
+    f'{oc["warn"]["n"]} rounds stopped with no note to pick up from.',
+    K.details('Details', K.dl([('Detector:', f'{nb["stops"]} stops after the 11-03 fix ({nb["noted"]} with a note, {nb["unnoted"]} without), {nb["late"]} late.'),
+                               ('Notes found:', f'{fr["note_quality"]["good"]} good, {fr["note_quality"]["thin"]} thin, {fr["note_quality"]["wrong"]} wrong.'),
+                               ('Retries read the note:', f'{fr["retry_found"]["prompt"]} via the prompt, {fr["retry_found"]["never"]} never.')] + [('', p) for p in fr['summary'][:1]]))))
+if vz.get('shutdowns'):
+    sd = vz['shutdowns']; lost = sum(s['rounds'] for s in sd)
+    S.append(K.section('shutdowns', 'Two shutdowns with jobs running', K.timeline(('11-03', '11-06', 4), [
+        (s['pos'], s['when'], s['note'], 'bad' if s['rounds'] else 'ok', s['mins'], s.get('anchor', 'start')) for s in sd]),
+        f'{lost} running rounds were killed with no note. Bars show minutes each had run.',
+        K.details('Details', K.dl([('', fr['summary'][1])] if len(fr['summary']) > 1 else []))))
+if vz.get('loop'):
+    lp = vz['loop']
+    S.append(K.section('loop', f'One retry loop: plan {lp["plan"]}', K.tickstrip(lp['launches'], lp['limit_hits'], 'launches', cap=3),
+        f'{lp["launches"]} cloud launches in {lp["hours"]} h; {lp["limit_hits"]} hit the limit within a minute. Green line: where a cap would stop it.'))
+days = st.get('daily', [])[-10:]
+if days:
+    S.append(K.section('days', 'Stops per day', K.stacked_days(days, [('noted', 'With a note', 'ok'), ('unnoted', 'No note', 'bad'), ('late', 'Late, nothing lost', 'skip')]),
+        'From the Run Dashboard detector, which does not see vanished jobs.'))
+nd = sum(f['status'] == 'done' for f in fx); no = sum(f['status'] == 'open' for f in fx)
+rej = [(f'{r["result"]}:', f'{r["claim"]}. {r["why"]}') for r in fr.get('rejected', [])]
+S.append(f'<section id="fixes"><h2>Fixes: {nd} done, {no} open</h2>' + K.cards(fx)
+         + K.details('Details', K.dl([(f['name'] + ':', f['text']) for f in fx]) + (f'<p><b>Claims that did not hold</b></p>{K.dl(rej)}' if rej else '')) + '</section>')
+S.append(K.decision_cards(openq, answered))
+nav = [('#ended', 'Rounds'), ('#shutdowns', 'Shutdowns'), ('#fixes', 'Fixes')] + ([('#decisions', 'Your calls')] if openq else []) + [('../_run-dashboard/index.html', 'Run Dashboard'), ('review-all-' + fr['window'][-10:] + '.html', 'All reviews')]
+win = fr['window'].replace('..', ' to ')
+out = K.page(a.out, 'Handoff review', f'Round stops and notes, {win}', vz.get('verdict_short', fr['verdict']), tiles, ''.join(S), nav, win,
+             summary={'name': 'handoff', 'headline': f'{pct}% of rounds clean on the first try; {nb["lost_work"]} lost work with no note',
+                      'chart': K.funnel(('Rounds', nb['rounds']), [(oc['ok']['label'], oc['ok']['n'], 'ok', ''), (oc['note']['label'], oc['note']['n'], 'info', ''), (oc['warn']['label'], oc['warn']['n'], 'bad', '')]),
+                      'fixes': {'done': nd, 'open': no}, 'decisions': openq})
+shutil.copy(out, os.path.join(os.path.dirname(out), 'handoff-review-latest.html'))
+print('wrote', out, '+ handoff-review-latest.html')

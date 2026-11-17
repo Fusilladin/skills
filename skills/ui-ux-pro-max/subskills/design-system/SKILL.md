@@ -231,7 +231,7 @@ assets/designs/slides/claudekit-pitch-251223.html
 ### Command
 
 ```bash
-/slides:create "10-slide investor pitch for ClaudeKit Marketing"
+/slides:create "10-slide investor pitch for Example Product"
 ```
 
 ## Best Practices

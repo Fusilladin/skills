@@ -54,19 +54,19 @@ Then present the plan (path, inputs, theme, charts planned) and exit plan mode. 
   - shortened transitions for the known lantern chart classes (`.draw .gx .pop .fade`).
   - blurred headers made solid: any CSS rule with `backdrop-filter: blur(...)` loses the blur and its `rgba()` background becomes opaque.
   Generators should call its `inject(html, {home})` export; plan-status-page's `build.mjs` does. For a hand-built header you can paste `scroll-perf.html` instead (style in head, `<div class="prog" id="prog">` in the header, script before `</body>`). Then run the mjs anyway for the back button.
-- **Fast scroll motion (always):** shapes inside an `<svg>` are not GPU-composited, so every frame of a transition on an SVG child (bar, dot, line draw) repaints the whole chart on the main thread. Measured on plan 03's index (4x CPU throttle): long staggered child transitions gave ~22ms average / ~47ms p95 frames while scrolling; short ones gave ~14ms / ~26ms.
+- **Fast scroll motion (always):** shapes inside an `<svg>` are not GPU-composited, so every frame of a transition on an SVG child (bar, dot, line draw) repaints the whole chart on the main thread. Measured on an example project index (4x CPU throttle): long staggered child transitions gave ~22ms average / ~47ms p95 frames while scrolling; short ones gave ~14ms / ~26ms.
   - SVG children: transitions of 0.6s or less (bars/dots ~0.45s, fades ~0.4s), **no per-element `transition-delay` stagger**. Stagger HTML elements instead.
   - Animate only `transform` and `opacity` (plus `stroke-dashoffset` for line draws). Never animate layout properties, `filter`, or `d`/geometry on scroll.
   - Prefer HTML/CSS bars (`div` + `transform:scaleX`) where a chart allows it; those are composited and cost almost nothing.
   - Infinite loops (dash flows, marquees, JS/GSAP `repeat:-1` tweens) pause while offscreen (`scroll-perf.html` handles `.flow`, `.loop`, `.marquee`; pause GSAP loops with a ScrollTrigger `onToggle`).
   - Reveal IntersectionObserver uses `rootMargin:'0px 0px 5% 0px'` so motion starts just before the element enters view; unobserve after reveal.
   - Scroll listeners are `{passive:true}` and rAF-throttled. `will-change` on an `<svg>` does not help; do not add it.
-  - No `backdrop-filter: blur()` on sticky/fixed headers or other large layers: the browser re-blurs everything behind them every scroll frame (felt as laggy scroll on plan 03, worse without GPU acceleration on Linux). Use an opaque background in the theme's `--bg` color instead.
+  - No `backdrop-filter: blur()` on sticky/fixed headers or other large layers: the browser re-blurs everything behind them every scroll frame (felt as laggy scroll on the example page, worse without GPU acceleration on Linux). Use an opaque background in the theme's `--bg` color instead.
   - Keep `prefers-reduced-motion` turning all of this off.
 - Apply theme rules: `<style id="theme" data-theme="NAME">`, then `theme.py fix-chars FILE.html`.
 
 ## Rules
 
 - Load the design sub-skills by reading their SKILL.md files, never via the Skill tool (see top).
-- Same session, no subagents.
+- Same session, no subagents. Exception: if you are the plans coordinator or watcher, run the intake yourself, then hand the whole build to ONE subagent (or `_run/bin/headless.sh`) with the answers and this skill path. That subagent follows this file in its own session; you only relay its result.
 - Finish with: path taken, theme (and new theme name if created), files written, charts built, fixes applied, text humanized, and the absolute path of the HTML file as the last line.

@@ -1,15 +1,17 @@
 # Agent skills
 
-A collection of 48 skill packages with supporting scripts, references, assets, and package license files.
+A collection of 53 skill packages with supporting scripts, references, assets, and package license files.
 
 ## Install
 
 ```bash
-git clone https://github.com/Fusilladin/skills.git
+git clone https://github.com/OWNER/skills.git
 cd skills
 mkdir -p ~/.agents/skills
 cp -R skills/humanizer ~/.agents/skills/
 ```
+
+Replace `OWNER` with the repository owner before cloning.
 
 Copy a whole package, including its resources. The repository aliases expose packages to compatible agents while working in this checkout.
 
@@ -17,6 +19,7 @@ Copy a whole package, including its resources. The repository aliases expose pac
 
 | Skill | Collection |
 | --- | --- |
+| [astra-review](skills/astra-review/SKILL.md) | Community and custom skills |
 | [banner-design](skills/banner-design/SKILL.md) | UI/UX Pro Max |
 | [brand](skills/brand/SKILL.md) | UI/UX Pro Max |
 | [brandkit](skills/brandkit/SKILL.md) | Taste Skill |
@@ -29,10 +32,14 @@ Copy a whole package, including its resources. The repository aliases expose pac
 | [design-taste-frontend-v1](skills/design-taste-frontend-v1/SKILL.md) | Taste Skill |
 | [deslop](skills/deslop/SKILL.md) | Community and custom skills |
 | [deslop-deep](skills/deslop-deep/SKILL.md) | Community and custom skills |
+| [fable-review](skills/fable-review/SKILL.md) | Community and custom skills |
 | [fast-output](skills/fast-output/SKILL.md) | Community and custom skills |
 | [full-output-enforcement](skills/full-output-enforcement/SKILL.md) | Taste Skill |
 | [gpt-review](skills/gpt-review/SKILL.md) | Community and custom skills |
 | [gpt-taste](skills/gpt-taste/SKILL.md) | Taste Skill |
+| [grill-html](skills/grill-html/SKILL.md) | Community and custom skills |
+| [grill-me](skills/grill-me/SKILL.md) | Community and custom skills |
+| [grilling](skills/grilling/SKILL.md) | Community and custom skills |
 | [handoff-review](skills/handoff-review/SKILL.md) | Community and custom skills |
 | [high-end-visual-design](skills/high-end-visual-design/SKILL.md) | Taste Skill |
 | [human-summary](skills/human-summary/SKILL.md) | Community and custom skills |
@@ -44,12 +51,12 @@ Copy a whole package, including its resources. The repository aliases expose pac
 | [industrial-brutalist-ui](skills/industrial-brutalist-ui/SKILL.md) | Taste Skill |
 | [linkedin-post-generator](skills/linkedin-post-generator/SKILL.md) | LinkedIn Post Generator |
 | [memory-review](skills/memory-review/SKILL.md) | Community and custom skills |
-| [microsoft-password-loop](skills/microsoft-password-loop/SKILL.md) | Community and custom skills |
 | [minimalist-ui](skills/minimalist-ui/SKILL.md) | Taste Skill |
 | [next-steps](skills/next-steps/SKILL.md) | Community and custom skills |
 | [notes-mode](skills/notes-mode/SKILL.md) | Community and custom skills |
 | [page-update](skills/page-update/SKILL.md) | Community and custom skills |
 | [pdf-redact](skills/pdf-redact/SKILL.md) | Community and custom skills |
+| [project-status](skills/project-status/SKILL.md) | Community and custom skills |
 | [redesign-existing-projects](skills/redesign-existing-projects/SKILL.md) | Taste Skill |
 | [slides](skills/slides/SKILL.md) | UI/UX Pro Max |
 | [stitch-design-taste](skills/stitch-design-taste/SKILL.md) | Taste Skill |
@@ -70,7 +77,9 @@ Copy a whole package, including its resources. The repository aliases expose pac
 
 This export omits machine configuration, account details, personal filesystem locations, and Anthropic-provided skill packages. It starts with fresh Git history. Example project paths are generic; configure them for your setup.
 
-Some skills depend on external tools, connectors, model runtimes, or project scripts. Those dependencies are named in each package and are not included here.
+Some skills depend on external tools, connectors, model runtimes, or project scripts. Those dependencies are named in each package and are not included here. Paths beginning with `/path/to/` are configuration placeholders. Provider-specific review skills require their named CLI and model; refreshing this collection does not execute them.
+
+The existing competitor, handoff, memory, verify, and weekly-system review packages are retained for compatibility. Their collectors and integrations require a compatible project workspace, dashboard schema, or local service. Configure these dependencies before use. The review page builders include their shared helper locally; the machine-specific review orchestrator is excluded. New grilling packages work independently of that orchestrator.
 
 ## Licenses
 

@@ -1,0 +1,10 @@
+/* assay-night: an assay office after hours. Soot-black canvas, iron-grey panels with hairline seams, assay-gold primary (proof, passing) and verdigris second accent (evidence, links), red only for failing results. Heavy condensed system display, system sans body, mono readings, 10px cards, pill nav. Built for plans/_reports/coding-tests-research (design-all, 2026-11). */
+:root{color-scheme:dark;--bg:#0f0e0c;--panel:#191815;--panel2:#24221e;--line:#3a3630;--text:#f1ece2;--muted:#b4ab9c;--green:#e7b54a;--purple:#e7b54a;--accent:#e7b54a;--accent2:#5fc6a8;--red:#ef6f5c;--amber:#e7b54a;--mono:ui-monospace,"Cascadia Code","JetBrains Mono","Liberation Mono",monospace;--display:"Avenir Next Condensed","Bahnschrift","Roboto Condensed","Arial Narrow",system-ui,sans-serif;--body:"Segoe UI",system-ui,-apple-system,sans-serif}
+body{background:var(--bg);color:var(--text);font:17px/1.65 var(--body);margin:0}
+header .bar{display:flex;align-items:center;gap:16px}h1,h2,h3{font-family:var(--display);letter-spacing:-.01em}
+a{color:var(--accent2)}nav a,nav summary{color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px;text-decoration:none}
+nav .menu{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px}.card.pending{border-color:var(--accent)}
+.status.ok{color:var(--accent2)}.status.info{color:var(--accent)}.l,.muted,.src{color:var(--muted)}.missing{color:var(--red)}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%}th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left}
+.decision{background:var(--panel);border:1px solid var(--line);border-radius:10px}.actions button{border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--text)}

@@ -22,11 +22,11 @@ After finishing a download or analysis batch and writing its final reports/statu
 refresh the shared folder map before the final response:
 
 ```bash
-python3 ~/projects/video-analyzer/bin/update-knowledge-map.py
+python3 /path/to/projects/video-analyzer/bin/update-knowledge-map.py
 ```
 
-This rebuilds `~/projects/video-analyzer/knowledge-map.html` from
-current folders and saved evidence, including related Jev work. Run it after a
+This rebuilds `/path/to/projects/video-analyzer/knowledge-map.html` from
+current folders and saved evidence, including related Related tooling work. Run it after a
 partial or interrupted batch too, once its status is recorded. Keep partial,
 failed, and unfinalized runs visible; do not label them complete just because a
 report exists. This is a skill completion step, not a background watcher or an
@@ -36,7 +36,7 @@ and report that it is stale.
 ## Topic folders
 
 For a new topic without an explicit destination, use
-`~/projects/video-analyzer/topics/YYYY-MM-DD-topic-slug/`.
+`/path/to/projects/video-analyzer/topics/YYYY-MM-DD-topic-slug/`.
 Use the batch start date in America/Chicago and a short lowercase,
 hyphen-separated topic name (for example `2026-10-05-agent-routing`).
 Put downloads in that folder's `downloads/` by passing an explicit
@@ -44,7 +44,7 @@ Put downloads in that folder's `downloads/` by passing an explicit
 within the same dated topic folder. Reuse its path when continuing a batch;
 for a distinct same-day batch with the same name, append `-2`, `-3`, etc.
 A user-specified destination or an existing input folder takes precedence.
-Other related work belongs in a separate project at `~/projects/related-project/`; keep its downloads
+Related tooling is a separate project at `/path/to/projects/related-tooling/`; keep its downloads
 and results there, without adding a date or moving it into `topics/`.
 These are skill workflow defaults; the CLI's own defaults are unchanged.
 

@@ -1,5 +1,10 @@
 [
   {
+    "collection": "Community and custom skills",
+    "name": "astra-review",
+    "path": "skills/astra-review"
+  },
+  {
     "collection": "UI/UX Pro Max",
     "name": "banner-design",
     "path": "skills/banner-design"
@@ -15,22 +20,22 @@
     "path": "skills/brandkit"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "claude-review",
     "path": "skills/claude-review"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "competitor-scan",
     "path": "skills/competitor-scan"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "design",
     "path": "skills/design"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "design-all",
     "path": "skills/design-all"
   },
@@ -50,17 +55,22 @@
     "path": "skills/design-taste-frontend-v1"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "deslop",
     "path": "skills/deslop"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "deslop-deep",
     "path": "skills/deslop-deep"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
+    "name": "fable-review",
+    "path": "skills/fable-review"
+  },
+  {
+    "collection": "Community and custom skills",
     "name": "fast-output",
     "path": "skills/fast-output"
   },
@@ -70,7 +80,7 @@
     "path": "skills/full-output-enforcement"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "gpt-review",
     "path": "skills/gpt-review"
   },
@@ -80,7 +90,22 @@
     "path": "skills/gpt-taste"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
+    "name": "grill-html",
+    "path": "skills/grill-html"
+  },
+  {
+    "collection": "Community and custom skills",
+    "name": "grill-me",
+    "path": "skills/grill-me"
+  },
+  {
+    "collection": "Community and custom skills",
+    "name": "grilling",
+    "path": "skills/grilling"
+  },
+  {
+    "collection": "Community and custom skills",
     "name": "handoff-review",
     "path": "skills/handoff-review"
   },
@@ -90,7 +115,7 @@
     "path": "skills/high-end-visual-design"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "human-summary",
     "path": "skills/human-summary"
   },
@@ -130,14 +155,9 @@
     "path": "skills/linkedin-post-generator"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "memory-review",
     "path": "skills/memory-review"
-  },
-  {
-    "collection": "Personal and installed skills",
-    "name": "microsoft-password-loop",
-    "path": "skills/microsoft-password-loop"
   },
   {
     "collection": "Taste Skill",
@@ -145,24 +165,29 @@
     "path": "skills/minimalist-ui"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "next-steps",
     "path": "skills/next-steps"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "notes-mode",
     "path": "skills/notes-mode"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "page-update",
     "path": "skills/page-update"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "pdf-redact",
     "path": "skills/pdf-redact"
+  },
+  {
+    "collection": "Community and custom skills",
+    "name": "project-status",
+    "path": "skills/project-status"
   },
   {
     "collection": "Taste Skill",
@@ -180,12 +205,12 @@
     "path": "skills/stitch-design-taste"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "taste",
     "path": "skills/taste"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "theme",
     "path": "skills/theme"
   },
@@ -200,42 +225,42 @@
     "path": "skills/ui-ux-pro-max"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "update-skills",
     "path": "skills/update-skills"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "verify-review",
     "path": "skills/verify-review"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "video-analyzer",
     "path": "skills/video-analyzer"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "video-analyzer-creative",
     "path": "skills/video-analyzer-creative"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "video-analyzer-knowledge",
     "path": "skills/video-analyzer-knowledge"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "video-analyzer-vision",
     "path": "skills/video-analyzer-vision"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "weekly-system-review",
     "path": "skills/weekly-system-review"
   },
   {
-    "collection": "Personal and installed skills",
+    "collection": "Community and custom skills",
     "name": "yt-downloader",
     "path": "skills/yt-downloader"
   }

@@ -613,7 +613,7 @@ def generate_cta_slide(data):
             <a href="{_safe_url(data.get('cta_url', '#'))}" class="btn" style="background: var(--color-foreground); color: var(--color-primary);">{_e(data.get('cta', 'Start Free Trial'))}</a>
         </div>
         <div class="slide-footer" style="border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6);">
-            <span>{_e(data.get('contact', 'contact@example.com'))}</span>
+            <span>{_e(data.get('contact', 'CONTACT_EMAIL'))}</span>
             <span>{_e(data.get('website', 'www.example.com'))}</span>
         </div>
     </section>
@@ -669,7 +669,7 @@ def main():
             {
                 'type': 'title',
                 'badge': 'Investor Deck 2024',
-                'title': 'ClaudeKit Marketing',
+                'title': 'Example Product',
                 'subtitle': 'Your AI marketing team. Always on.',
                 'cta': 'Join Waitlist',
                 'secondary_cta': 'See Demo',
@@ -729,7 +729,7 @@ def main():
             {
                 'type': 'testimonial',
                 'quote': 'ClaudeKit replaced 3 tools and 2 contractors. Our content output tripled while costs dropped 60%.',
-                'author': 'Sarah Chen',
+                'author': 'TESTIMONIAL_AUTHOR',
                 'role': 'Head of Marketing, TechStartup',
                 'company': 'ClaudeKit',
                 'page': '6'
@@ -739,12 +739,12 @@ def main():
                 'headline': 'Ship campaigns while you sleep',
                 'subheadline': 'Early access available. Limited spots.',
                 'cta': 'Join the Waitlist',
-                'contact': 'hello@claudekit.ai',
+                'contact': 'CONTACT_EMAIL',
                 'website': 'claudekit.ai'
             }
         ]
 
-        html = generate_deck(demo_slides, "ClaudeKit Marketing - Pitch Deck")
+        html = generate_deck(demo_slides, "Example Product - Pitch Deck")
 
         OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
         output_path = OUTPUT_DIR / f"demo-pitch-{datetime.now().strftime('%y%m%d')}.html"

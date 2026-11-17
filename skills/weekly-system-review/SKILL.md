@@ -5,9 +5,9 @@ description: Review the user's goals weekly against project evidence, research r
 
 # Weekly system review
 
-Canonical goals project: `~/projects/goals`. Read its AGENTS.md, data/goals.json, knowledge/operating-policy.md and the latest snapshot/review. This skill is the synthesis layer; the zero-model weekly collector only gathers candidates.
+Canonical goals project: `/path/to/projects/goals`. Read its AGENTS.md, data/goals.json, knowledge/operating-policy.md and the latest snapshot/review. This skill is the synthesis layer; the zero-model weekly collector only gathers candidates.
 
-Run `python3 ~/projects/goals/scripts/goals.py weekly` once if collection is due. Read current source files only for disputed/stale claims. Preserve client commitments; unknown metrics stay unknown. Distinguish planned, implemented, tested, deployed, sent and paid. Never count fixtures or a harness 'done' as buyer outcomes.
+Run `python3 /path/to/projects/goals/scripts/goals.py weekly` once if collection is due. Read current source files only for disputed/stale claims. Preserve client commitments; unknown metrics stay unknown. Distinguish planned, implemented, tested, deployed, sent and paid. Never count fixtures or a harness 'done' as buyer outcomes.
 
 Compare the last week's logged outcomes and measured time against acceptance gates and recommended allocation. Repo activity/harness jobs indicate attention only. Identify specific drift with evidence; missing logs are a measurement gap. Select one next commercial outcome for leads and one for audits, retain the small support lanes and update next_action fields with concrete steps. Honor explicit owner requests; explain a conflict briefly rather than overriding them.
 

@@ -4,7 +4,7 @@
   python3 collect.py --from 2026-10-27 --to 2026-11-03 --out <workdir> [--batch N] [--max-batches 8] [--fix-since "2026-10-29 15:00"]
 
 Read-only sources: _run/driver.log (launch/done/advance/paused/checkpoint/takeover/late/waiting/lost lines) and
-_observatory/blockers.mjs optimizeTips() (the Observatory's own stop detector: stops, stopStats).
+_run-dashboard/blockers.mjs optimizeTips() (the Run Dashboard's own stop detector: stops, stopStats).
 Writes <out>/rounds.json (one row per plan+step), <out>/stops.json (detector output) and
 <out>/batches/batchNN.json (whole plans per batch, ~18 rounds each; inputs for the Haiku agents).
 """
@@ -12,7 +12,7 @@ import argparse, json, os, re, subprocess
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-PLANS = os.path.expanduser('~/projects/plans')
+PLANS = '/path/to/projects/workspace'
 ap = argparse.ArgumentParser()
 ap.add_argument('--from', dest='frm', required=True); ap.add_argument('--to', required=True)
 ap.add_argument('--out', required=True); ap.add_argument('--batch', type=int, default=0); ap.add_argument('--max-batches', type=int, default=8)
@@ -37,8 +37,8 @@ for (plan, step), r in sorted(rounds.items()):
                  'notes': [n for n in ('PAUSE.md', 'HANDOFF.md', 'AUDIT.md') if os.path.exists(f'{b}/{n}')],
                  'advanced': any(' advance ' in e for e in r['events']), 'events': r['events'][-40:]})
 json.dump(rows, open(f'{a.out}/rounds.json', 'w'), indent=1)
-# detector output (same code the Observatory runs)
-js = ("import('%s/_observatory/blockers.mjs').then(m=>{const fs=require('fs');const lines=fs.readFileSync('%s/_run/driver.log','utf8').split('\\n').slice(-80000);"
+# detector output (same code the Run Dashboard runs)
+js = ("import('%s/_run-dashboard/blockers.mjs').then(m=>{const fs=require('fs');const lines=fs.readFileSync('%s/_run/driver.log','utf8').split('\\n').slice(-80000);"
       "const o=m.optimizeTips({lines,plans:[],health:{},speed:{},tally:{},prio:{projects:{}}});"
       "console.log(JSON.stringify({stopStats:o.stopStats,stops:o.stops,tip:o.tips.find(t=>t.kind==='handoff')||null}))})") % (PLANS, PLANS)
 det = subprocess.run(['node', '-e', js], capture_output=True, text=True, cwd=PLANS)

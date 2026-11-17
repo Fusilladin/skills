@@ -1,0 +1,27 @@
+/* chalk-docket: a court docket read under a desk lamp. Blue-black slate canvas, flat ink panels ruled with hairlines, chalk-white text, verdict-amber primary (the finding, the measured result) and steel-cyan second accent (limits, counterpoints, links), coral only for faults. Semi-condensed serif display (Noto Serif SemiCondensed when embedded, else Charter/Iowan/Georgia), system sans body, mono figures with tabular numerals, 6px inner and 12px outer corners, opaque sticky header, pill nav. Built for plans/reports/ai-engineering-scale.html (design-all, 2026-11). */
+:root{color-scheme:dark;--bg:#0b0f17;--panel:#111724;--panel2:#18202f;--line:#273146;--line2:#34405a;--text:#e9ebf0;--muted:#a7b0c2;--faint:#7c879c;--green:#e6b450;--purple:#e6b450;--accent:#e6b450;--accent2:#73c3d2;--red:#e98a78;--amber:#e6b450;--mono:ui-monospace,"Cascadia Code","JetBrains Mono","Liberation Mono",monospace;--display:"Docket Display","Iowan Old Style","Charter","Bitstream Charter","Georgia",serif;--body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--sans:var(--body)}
+*{box-sizing:border-box}
+html{scrollbar-color:var(--line2) var(--bg)}
+body{background:var(--bg);color:var(--text);font:17px/1.65 var(--body);margin:0;font-variant-numeric:tabular-nums}
+::selection{background:var(--accent);color:var(--bg)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:-.015em;text-wrap:balance}
+a{color:var(--accent2);text-underline-offset:4px;text-decoration-thickness:1px}a:hover{text-decoration-thickness:2px}
+header{background:var(--bg);border-bottom:1px solid var(--line)}
+header .bar{display:flex;align-items:center;gap:16px}
+.stamp{font:12px var(--mono);color:var(--muted)}
+nav a,nav summary{color:var(--text);border:1px solid var(--line);border-radius:999px;padding:7px 14px;text-decoration:none;background:var(--panel)}
+nav a:hover,nav summary:hover{border-color:var(--line2);background:var(--panel2)}
+nav .menu{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 40px -12px #02040acc}
+nav .menu a{border:0;border-radius:6px;background:none}
+.strip{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px}.card.pending{border-color:var(--accent)}
+.status.ok{color:var(--accent)}.status.info{color:var(--accent2)}.l,.muted,.src{color:var(--muted)}.missing{color:var(--red)}
+section h2{color:var(--text)}h3{color:var(--text)}
+.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:15px}th{font:12px var(--mono);color:var(--muted);text-transform:none}th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}tr.nh td{color:var(--accent)}
+.items .item{border-top:1px solid var(--line);padding:12px 0}
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+.decision{background:var(--panel);border:1px solid var(--line);border-radius:12px}.actions button{border-radius:999px;border:1px solid var(--line);background:var(--panel2);color:var(--text);min-height:40px;padding:6px 14px}
+.actions button:hover{border-color:var(--accent)}
+#dec-status{color:var(--muted);font:12px var(--mono)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

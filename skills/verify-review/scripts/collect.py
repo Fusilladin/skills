@@ -4,7 +4,7 @@
   python3 collect.py --from 2026-10-27 --to 2026-11-03 --out <workdir> [--batch 12]
 
 Sources (read-only):
-  - Observatory /api/snapshot agents (pulled in 3 h windows: the API caps agents at 300 rows)
+  - Run Dashboard /api/snapshot agents (pulled in 3 h windows: the API caps agents at 300 rows)
   - _run/driver.log launch/done lines (attempts, rc, missing outputs, minutes)
   - each job dir's meta (provider waits, codex tries, rc 124, queue waits)
 Writes <out>/verify-data.json (one row per run) and <out>/batches/batchNN.json (inputs for Haiku agents).
@@ -13,7 +13,7 @@ import argparse, json, os, re, urllib.request
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-PLANS = os.path.expanduser('~/projects/plans')
+PLANS = '/path/to/projects/workspace'
 OBS = 'http://localhost:18990'
 ap = argparse.ArgumentParser()
 ap.add_argument('--from', dest='frm', required=True); ap.add_argument('--to', required=True)
@@ -23,7 +23,7 @@ t0, t1 = datetime.fromisoformat(a.frm), datetime.fromisoformat(a.to)
 os.makedirs(f'{a.out}/batches', exist_ok=True)
 is_verify = lambda step: bool(step) and re.fullmatch(r'(v\d+-)?verify', step)
 
-# 1. Observatory attempts
+# 1. Run Dashboard attempts
 obs = defaultdict(list); t = t0
 while t < t1:
     e = min(t + timedelta(hours=3), t1)
@@ -31,7 +31,7 @@ while t < t1:
     try:
         snap = json.load(urllib.request.urlopen(url, timeout=300))
     except Exception as ex:
-        raise SystemExit(f'Observatory not reachable ({ex}); start it: systemctl --user start observatory')
+        raise SystemExit(f'Run Dashboard not reachable ({ex}); start it: systemctl --user start run-dashboard')
     for ag in snap.get('agents', []):
         if is_verify(ag.get('step')):
             k = (ag['project'], ag['step'], ag.get('started'))
@@ -68,7 +68,7 @@ for (proj, step), r in sorted(runs.items()):
     ag = obs[(proj, step)]
     models = sorted({x.get('model') or '?' for x in ag}) or (['codex-sol'] if 'premium: codex' in meta else ['opus-5-5'])
     n = int(re.search(r'v(\d+)', step).group(1)) if step != 'verify' else 2
-    cand = [f'{PLANS}/{proj}/_build/v{n + 1}-final/VERIFY.md', f'{PLANS}/{proj}/_build/VERIFY.md'] if step != 'verify' else \
+    cand = [f'{PLANS}/{proj}/_build/v{n}-final/VERIFY.md', f'{PLANS}/{proj}/_build/VERIFY.md'] if step != 'verify' else \
            [f'{PLANS}/{proj}/_build/v2-final/VERIFY.md', f'{PLANS}/{proj}/_build/VERIFY.md']
     rows.append({
         'project': proj, 'step': step, 'ver': n, 'start': start.strftime('%Y-%m-%d %H:%M'),
@@ -86,7 +86,7 @@ for (proj, step), r in sorted(runs.items()):
         'missing_retry': sum(bool(d['missing']) for d in r['dones'][:-1]),
         'job_dir': jd, 'verify_md_candidates': [c for c in cand if os.path.exists(c)],
         'deferred_md_candidates': [c.replace('VERIFY.md', 'DEFERRED.md') for c in cand if os.path.exists(c.replace('VERIFY.md', 'DEFERRED.md'))],
-        'observatory_attempts': [{k: x.get(k) for k in ('provider', 'model', 'rc', 'cost', 'costState', 'started', 'ended', 'queueWaitMin', 'provWaitMin')} for x in ag],
+        'run-dashboard_attempts': [{k: x.get(k) for k in ('provider', 'model', 'rc', 'cost', 'costState', 'started', 'ended', 'queueWaitMin', 'provWaitMin')} for x in ag],
         'driver_log': [f"{d['at']:%m-%d %H:%M} rc={d['rc']} missing=[{d['missing']}] {d['min']}min" for d in r['dones']],
     })
 json.dump(rows, open(f'{a.out}/verify-data.json', 'w'), indent=1)
